@@ -1,0 +1,30 @@
+{
+  "name": "spotify-chromecast-api",
+  "version": "1.0.0",
+  "description": "A REST API controlling spotify music on my Chromecast",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dkundel/spotify-chromecast-api.git"
+  },
+  "keywords": [
+    "spotify",
+    "chromecast",
+    "rest"
+  ],
+  "author": "Dominik Kundel <dominik@twilio.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dkundel/spotify-chromecast-api/issues"
+  },
+  "homepage": "https://github.com/dkundel/spotify-chromecast-api#readme",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "castv2-client": "^1.1.2",
+    "express": "^4.14.0",
+    "mdns": "^2.3.3"
+  }
+}
