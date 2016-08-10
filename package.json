@@ -25,6 +25,7 @@
     "body-parser": "^1.15.2",
     "castv2-client": "^1.1.2",
     "express": "^4.14.0",
-    "mdns": "^2.3.3"
+    "mdns": "^2.3.3",
+    "request": "^2.74.0"
   }
 }
