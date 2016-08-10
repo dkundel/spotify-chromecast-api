@@ -7,11 +7,12 @@ const request = require('request');
 const os = require('os');
 const fs = require('fs');
 const path = require('path');
+const querystring = require('querystring');
 
 const PORT = process.env.PORT || 3000;
 const app = express();
 const devices = new Map();
-const playlist = [];
+let playlist = [];
 
 const browser = mdns.createBrowser(mdns.tcp('googlecast'));
 
@@ -70,11 +71,16 @@ function getMediaObject(name, artist, songUrl, picture) {
       images: [
         { url: picture }
       ]
-    }        
+    }
   };
 }
 
+let idx = 0;
 browser.on('serviceUp', (service) => {
+  if (idx !== 0) {
+    return;
+  }
+  idx = 1;
   console.log('found device "%s" at %s:%d', service.name, service.addresses[0], service.port);
   // ondeviceup(service.addresses[0]);
   deviceRegister(service.name, service.addresses[0], service.port).then(player => {
@@ -138,6 +144,7 @@ app.patch('/api/devices/:id', (req, res, next) => {
   }
 
   if (state === 'pause') {
+    playlist = [playlist[0], ...playlist];
     device.player.pause((err, state) => {
       console.log('Pause');
     });
@@ -153,6 +160,7 @@ app.patch('/api/devices/:id', (req, res, next) => {
       device.player.load(playlist[0], { autoplay: true }, (err, state) => {        
       });
     }
+    res.send('SKIP');
     writePlaylist();
   }
 });
@@ -161,9 +169,14 @@ app.post('/api/devices/:id/songs', (req, res, next) => {
   let song = req.body.song;
   let { player } = devices.get(parseInt(req.params.id, 10));
 
-  request.get(`https://api.spotify.com/v1/search?q=${song}&type=track&market=DE`, (err, data, body) => {
+  if (!song) {
+    res.send(400, 'Please submit a "song" post paramater');
+    return;
+  }
+
+  request.get(`https://api.spotify.com/v1/search?q=${querystring.escape(song)}&type=track&market=DE`, (err, data, body) => {
     if (err || data.statusCode !== 200) {
-      console.error(err, data);
+      // console.error(err, data);
       res.send(500, 'FAIL');
       return;
     }
@@ -175,7 +188,7 @@ app.post('/api/devices/:id/songs', (req, res, next) => {
 
       request.get(`https://api.spotify.com/v1/tracks/${id}`, (err, data, body) => {
         if (err || data.statusCode !== 200) {
-          console.error(err, data);
+          // console.error(err, data);
           res.send(500, 'FAIL');
           return;
         }
@@ -190,6 +203,7 @@ app.post('/api/devices/:id/songs', (req, res, next) => {
           let media = getMediaObject(title, artist, url, albumImage);
 
           playlist.push(media);
+          console.log(playlist);
           writePlaylist();
 
           if (playlist.length === 1) {
