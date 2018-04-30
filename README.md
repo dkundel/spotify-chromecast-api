@@ -1,6 +1,6 @@
 # Chromecast REST API playing Spotify
 
-This is a small "hack" that I built on a [Twitch stream](https://twitch.tv/twilio) that uses [thibauts/node-castv2-client](github.com/thibauts/node-castv2-client) to communicate with the Chromecast and the [Spotify Web API](https://developer.spotify.com/web-api/) to search for songs and extract the Preview Snippets to play them with the `DefaultMediaReceiver` on the Chromecast.
+This is a small "hack" that I built on a [Twitch stream](https://twitch.tv/twilio) that uses [thibauts/node-castv2-client](https://github.com/thibauts/node-castv2-client) to communicate with the Chromecast and the [Spotify Web API](https://developer.spotify.com/web-api/) to search for songs and extract the Preview Snippets to play them with the `DefaultMediaReceiver` on the Chromecast.
 
 ## Setup Instructions
 
